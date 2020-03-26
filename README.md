@@ -26,6 +26,7 @@
 * Rockets and crew already in space cannot be selected for new missions until they return to Earth.
 * In the event of a crew or rocket shortage, the user can create new ones on the fly.
 * If your budget gets cut or you really want to see if that rocket can do a flip, astronauts can be fired, and rockets can be 'stress tested'.
+* Don't forget to check out the leaderboard for some good stats!
 
 ENJOY!
 

@@ -39,6 +39,7 @@ class SpaceApp
         puts "8) Hire new astronaut"
         puts "9) Fire astronaut"
         puts "10) Stress test (destroy) rocket"
+        puts "L) Leaderboard"
         puts "Q) Exit program"
         puts " "
 
@@ -65,6 +66,8 @@ class SpaceApp
             fire_astronaut
         when "10"
             stress_test_rocket
+        when "l"
+            leaderboard
         when "q"
             puts ""
             exit
@@ -169,7 +172,7 @@ class SpaceApp
         new_rocket = rocket_array.sample 
         Rocket.create(name: new_rocket, capacity: 1 + rand(5), in_space: false)
         puts " "
-        puts "Your shiny new #{new_rocket} is ready!"
+        puts "Your shiny new #{new_rocket} is ready!".green
         puts " "
         menu
     end
@@ -184,7 +187,7 @@ class SpaceApp
         name = Faker::FunnyName.name
         new_astro = Astronaut.create(name: name, skill: roles.sample, in_space: false)
         puts " "
-        puts "#{new_astro.skill.upcase} #{new_astro.name} just left the academy; reporting for duty!"
+        puts "#{new_astro.skill.upcase} #{new_astro.name} just left the academy; reporting for duty!".green
         puts " "
         menu
     end
@@ -192,7 +195,7 @@ class SpaceApp
     def fire_astronaut
         puts "DUE TO BUDGET CUTS, ONE OF YOU UNLUCKY 'NAUTS HAS TO GO:".colorize(:red)
         unlucky = select_astronaut
-        puts "Hit the road, former-#{unlucky.skill} #{unlucky.name}. Maybe you should go write that book."
+        puts "Hit the road, former-#{unlucky.skill} #{unlucky.name}. Maybe you should go write that book.".red
         puts " "
         unlucky.destroy
         menu
@@ -201,13 +204,49 @@ class SpaceApp
     def stress_test_rocket
         puts "WE CALL IT A STRESS TEST, BUT IT'S REALLY JUST A CHANCE TO DO SOME BARREL ROLLS"
         unlucky = select_rocket
-        puts "BOOOOOOOOM".yellow.on_red.blink
+        theatrics = Artii::Base.new
+        puts theatrics.asciify("***BOOOOOOOOM***").yellow.on_red.blink
         puts " "
         unlucky.destroy
         menu
     end
 
+    def leaderboard
+        print "MOST PROLIFIC TEENMOM: ".green
+        puts most_prolific_teenmom
+        puts "\n"
+        print "ASTRONAUT WITH THE MOST FLIGHTS: ".yellow
+        puts astronaut_with_most_flights
+        puts " \n"
+        print "ROCKET WITH THE MOST SUCCESSFUL MISSIONS: ".blue
+        puts rocket_with_most_successful_missions
+        puts " "
+        puts " "
+        menu
+    end
+
     #### HELPER METHODS ####
+
+    def most_prolific_teenmom
+        managers = Mission.all.map {|mission| mission.manager_id}
+        max_manager = managers.max_by {|value| managers[value]}
+        best = Manager.all.find{|manager| manager.id == max_manager}
+        "#{best.id}) #{best.name}"
+    end
+
+    def astronaut_with_most_flights
+        astros = Mission.all.map {|mission| mission.astronaut_id}
+        max_naut = astros.max_by {|value| astros[value]}
+        best = Astronaut.all.find {|astro| astro.id == max_naut}
+        "#{best.id}) #{best.name}"
+    end
+
+    def rocket_with_most_successful_missions
+        rockets = Mission.all.map {|mission| mission.completed == true ? mission.rocket_id : nil}.compact
+        max_rocket = rockets.max_by {|value| rockets[value]}
+        best = Rocket.all.find {|rocket| rocket.id == max_rocket}
+        "#{best.id}) #{best.name}"
+    end
 
     def select_rocket
         rocket_array = Rocket.all.select {|rocket| rocket.in_space == false}
