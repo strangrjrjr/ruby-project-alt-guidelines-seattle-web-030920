@@ -93,7 +93,7 @@ class SpaceApp
         rocket.update(in_space: true)
         astro.update(in_space: true)
         puts " "
-        puts "Mission created! #{astro.name} will crew the #{rocket.name} on mission #{mission.name}."
+        puts "Mission created! #{astro.name} will crew the #{rocket.name} on mission #{mission.name}.".green
         puts " "
         menu
     end
@@ -109,7 +109,7 @@ class SpaceApp
         puts "----------------------------------------"
         view_completed_missions.each do |mission|
             if mission.completed == nil
-                puts "#{mission.id}) #{mission.name} ABORTED".colorize(:red)
+                puts "***#{mission.id}) #{mission.name}*** ABORTED".colorize(:red)
             else
                 puts "#{mission.id}) #{mission.name}".colorize(:green)
             end
@@ -300,41 +300,49 @@ class SpaceApp
 
     def select_rocket
         rocket_array = Rocket.all.select {|rocket| rocket.in_space == false}
-        ids = []
-        rocket_array.each do |rocket|
-            puts "#{rocket.id}) #{rocket.name}: Capacity #{rocket.capacity}"
-            ids << rocket.id
-        end
-        choice = gets.chomp
-        puts " "
-        while !ids.include?(choice.to_i)
-            puts "Invalid selection, please choose from available rockets by id number."
+        if rocket_array.empty?
+            create_rocket
+        else
+            ids = []
+            rocket_array.each do |rocket|
+                puts "#{rocket.id}) #{rocket.name}: Capacity #{rocket.capacity}"
+                ids << rocket.id
+            end
             choice = gets.chomp
             puts " "
+            while !ids.include?(choice.to_i)
+                puts "Invalid selection, please choose from available rockets by id number."
+                choice = gets.chomp
+                puts " "
+            end
+            rocket = Rocket.all.find{|rocket| rocket.id == choice.to_i}
+            rocket.update(in_space: true)
+            rocket
         end
-        rocket = Rocket.all.find{|rocket| rocket.id == choice.to_i}
-        rocket.update(in_space: true)
-        rocket
     end
 
     def select_astronaut
         astronaut_array = Astronaut.all.select {|astro| astro.in_space == false}
-        ids = []
-        astronaut_array.each do |astro|
-            puts "#{astro.id}) #{astro.name}: #{astro.skill}"
-            ids << astro.id
-        end
+        if astronaut_array.empty?
+            create_astronaut
+        else
+            ids = []
+            astronaut_array.each do |astro|
+                puts "#{astro.id}) #{astro.name}: #{astro.skill}"
+                ids << astro.id
+            end
 
-        choice = gets.chomp
-        puts " "
-        while !ids.include?(choice.to_i)
-            puts "Invalid selection, please choose from available crew by id number."
             choice = gets.chomp
             puts " "
+            while !ids.include?(choice.to_i)
+                puts "Invalid selection, please choose from available crew by id number."
+                choice = gets.chomp
+                puts " "
+            end
+            astro = Astronaut.all.find {|naut| naut.id == choice.to_i}
+            astro.update(in_space: true)
+            astro
         end
-        astro = Astronaut.all.find {|naut| naut.id == choice.to_i}
-        astro.update(in_space: true)
-        astro
     end
 
     def view_incomplete_missions
