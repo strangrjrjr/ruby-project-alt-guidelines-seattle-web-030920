@@ -13,7 +13,7 @@ class SpaceApp
         puts banner.asciify("Terrestrial Evaluation Exercise: New")
         puts banner.asciify("Mission Operations Manager")
         puts " "
-        system 'say welcome to: terrestrial evaluation exercise new mission operations manager'
+        system 'say welcome to: terrestrial evaluation exercise: new mission operations manager'
     end
 
     def login
@@ -37,6 +37,7 @@ class SpaceApp
         puts "7) View astronauts"
         puts "8) Hire new astronaut"
         puts "Q) Exit program"
+        puts " "
 
         choice = gets.chomp.downcase
 
@@ -82,7 +83,7 @@ class SpaceApp
         puts "Missions in progress:"
         puts "----------------------------------------"
         view_incomplete_missions.each do |mission|
-            puts "#{mission.id}) #{mission.name}"
+            puts "#{mission.id}) #{mission.name}".colorize(:blue)
         end
         puts " "
         puts "Completed missions:"
@@ -91,7 +92,7 @@ class SpaceApp
             if mission.completed == nil
                 puts "#{mission.id}) #{mission.name} ABORTED".colorize(:red)
             else
-                puts "#{mission.id}) #{mission.name}"
+                puts "#{mission.id}) #{mission.name}".colorize(:green)
             end
         end
         puts " "
