@@ -14,7 +14,8 @@ class SpaceApp
         puts banner.asciify("Terrestrial Evaluation Exercise: New")
         puts banner.asciify("Mission Operations Manager")
         puts " "
-        system 'say welcome to: terrestrial evaluation exercise: new mission operations manager'
+        # uncomment the next line if you're interested in having your computer yell at you
+        # system 'say welcome to: terrestrial evaluation exercise: new mission operations manager'
     end
 
     def login
@@ -212,6 +213,9 @@ class SpaceApp
     end
 
     def leaderboard
+        banner = Artii::Base.new
+        puts banner.asciify("Leaderboard").red
+        puts " "
         print "MOST PROLIFIC TEENMOM: ".green
         puts most_prolific_teenmom
         puts "\n"
@@ -229,23 +233,40 @@ class SpaceApp
 
     def most_prolific_teenmom
         managers = Mission.all.map {|mission| mission.manager_id}
-        max_manager = managers.max_by {|value| managers[value]}
+        # create a new hash filled with zeros; inject manager_id => occurrances_of_manager_id pairs
+        manager_freq = managers.inject(Hash.new(0)) { |man, inst| man[inst] += 1; man}
+        # find hash key with the largest value
+        max_manager = managers.max_by {|value| manager_freq[value]}
+        # that one's the best!
         best = Manager.all.find{|manager| manager.id == max_manager}
-        "#{best.id}) #{best.name}"
+        count = Mission.all.count {|mission| mission.manager_id == max_manager}
+        "#{best.id}) #{best.name} with #{count} missions!"
     end
 
     def astronaut_with_most_flights
         astros = Mission.all.map {|mission| mission.astronaut_id}
-        max_naut = astros.max_by {|value| astros[value]}
+        astro_freq = astros.inject(Hash.new(0)) { |ast, inst| ast[inst] += 1; ast}
+        max_naut = astros.max_by {|value| astro_freq[value]}
         best = Astronaut.all.find {|astro| astro.id == max_naut}
-        "#{best.id}) #{best.name}"
+        count = Mission.all.count {|mission| mission.astronaut_id == max_naut}
+        if best == nil
+            "A former employee with #{count} flights!"
+        else
+            "#{best.id}) #{best.name} with #{count} flights!"
+        end
     end
 
     def rocket_with_most_successful_missions
         rockets = Mission.all.map {|mission| mission.completed == true ? mission.rocket_id : nil}.compact
-        max_rocket = rockets.max_by {|value| rockets[value]}
+        rocket_freq = rockets.inject(Hash.new(0)) { |rkt, inst| rkt[inst] += 1; rkt}
+        max_rocket = rockets.max_by {|value| rocket_freq[value]}
         best = Rocket.all.find {|rocket| rocket.id == max_rocket}
-        "#{best.id}) #{best.name}"
+        count = Mission.all.count {|mission| mission.rocket_id == max_rocket}
+        if best == nil
+            "A charred piece of wreckage with #{count} successful flights...and one failure."
+        else
+            "#{best.id}) #{best.name} with #{count} successful missions!"
+        end
     end
 
     def select_rocket
