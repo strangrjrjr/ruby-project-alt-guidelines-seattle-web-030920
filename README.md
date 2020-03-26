@@ -11,7 +11,7 @@
 ### Usage
 * From a terminal inside the main folder, run `ruby bin/run.rb`
 * After the starting splash, you will be prompted to enter a TEENMOM username.
-  * Usernames can be any input, however they must unique. 
+  * Usernames can be any combination of characters, and each username in the database is guaranteed to be unique.
   * Any missions a TEENMOM creates will be tied to that username, however the currently logged on TEENMOM has access to all missions.
   * For compliance, TEENMOMs cannot be deleted.
 * A menu will prompt the user for a variety of actions.

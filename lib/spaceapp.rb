@@ -119,6 +119,7 @@ class SpaceApp
     end
 
     def update_mission
+        puts " "
         puts "Which mission would you like to update?"
         puts "---------------------------------------"
         mission_array = view_incomplete_missions
@@ -148,23 +149,34 @@ class SpaceApp
             puts "Invalid selection, please try again"
             update_mission
         end
+        puts " "
         menu
     end
 
     def generate_mission
+        puts " "
         rando_rocket = Rocket.all.find {|rocket| rocket.in_space == false}
         randonaut = Astronaut.all.find {|naut| naut.in_space == false}
         randoname = Faker::Company.buzzword + " " + Faker::Space.planet
         rando_mission = Mission.create(name:randoname, rocket_id:rando_rocket.id, astronaut_id:randonaut.id, manager_id:@manager.id, completed:false)
         rando_rocket.update(in_space:true)
         randonaut.update(in_space:true)
-        ap rando_mission
+        puts "#{rando_mission.id}) #{rando_mission.name} created by TEENMOM #{@manager.name}.".green
+        puts "============================================================"
+        puts " "
         menu
     end
 
-    # improve
     def view_rockets
-        ap Rocket.all
+        puts " "
+        Rocket.all.each do |rocket|
+            if rocket.in_space
+                puts "#{rocket.id}) #{rocket.name} : available".green
+            else
+                puts "#{rocket.id}) #{rocket.name} : deployed".red
+            end
+        end
+        puts "====================================================================="
         menu
     end
 
@@ -181,13 +193,21 @@ class SpaceApp
         menu
     end
 
-    # improve
     def view_astronauts
-        ap Astronaut.all
+        puts " "
+        Astronaut.all.each do |astronaut|
+            if astronaut.in_space
+                puts "#{astronaut.id}) #{astronaut.skill.upcase} #{astronaut.name} : available".green
+            else
+                puts "#{astronaut.id}) #{astronaut.skill.upcase} #{astronaut.name} : deployed".red
+            end
+        end
+        puts "====================================================================="
         menu
     end
 
     def create_astronaut
+        puts " "
         roles = ["commander", "pilot", "specialist", "copilot"]
         name = Faker::FunnyName.name
         new_astro = Astronaut.create(name: name, skill: roles.sample, in_space: false)
@@ -198,21 +218,25 @@ class SpaceApp
     end
 
     def fire_astronaut
+        puts " "
         puts "DUE TO BUDGET CUTS, ONE OF YOU UNLUCKY 'NAUTS HAS TO GO:".colorize(:red)
         unlucky = select_astronaut
         puts "Hit the road, former-#{unlucky.skill} #{unlucky.name}. Maybe you should go write that book.".red
         puts " "
         unlucky.destroy
+        puts " "
         menu
     end
 
     def stress_test_rocket
+        puts " "
         puts "WE CALL IT A STRESS TEST, BUT IT'S REALLY JUST A CHANCE TO DO SOME BARREL ROLLS"
         unlucky = select_rocket
         theatrics = Artii::Base.new
         puts theatrics.asciify("***BOOOOOOOOM***").yellow.on_red.blink
         puts " "
         unlucky.destroy
+        puts " "
         menu
     end
 
@@ -323,8 +347,11 @@ class SpaceApp
 
     def complete_mission(mission)
         mission.update(completed: true)
-        mission.astronaut.update(in_space: false)
-        mission.rocket.update(in_space: false)
+        binding.pry
+        astronaut = Astronaut.all.find {|a| a.id == mission.astronaut_id}
+        rocket = Rocket.all.find {|r| r.id == mission.rocket_id}
+        astronaut.update(in_space: false)
+        rocket.update(in_space: false)
         puts "Mission #{mission.name} completed!".colorize(:green)
         puts " "
         menu
