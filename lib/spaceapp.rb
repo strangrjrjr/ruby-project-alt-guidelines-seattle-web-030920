@@ -37,6 +37,8 @@ class SpaceApp
         puts "6) Build new rocket"
         puts "7) View astronauts"
         puts "8) Hire new astronaut"
+        puts "9) Fire astronaut"
+        puts "10) Stress test (destroy) rocket"
         puts "Q) Exit program"
         puts " "
 
@@ -59,6 +61,10 @@ class SpaceApp
             view_astronauts
         when "8"
             create_astronaut
+        when "9"
+            fire_astronaut
+        when "10"
+            stress_test_rocket
         when "q"
             exit
         else
@@ -70,7 +76,13 @@ class SpaceApp
         puts "What is your mission name?"
         puts " "
         name = gets.chomp
+        puts " "
+        puts "Please choose from the available spacecraft:"
+        puts "---------------------------------------------"
         rocket = select_rocket
+        puts " "
+        puts "Who will crew your spacecraft?"
+        puts "---------------------------------------------"
         astro = select_astronaut
         mission = Mission.create(name:name, rocket_id:rocket.id, astronaut_id:astro.id, completed: false, manager_id:@manager.id)
         rocket.update(in_space: true)
@@ -110,7 +122,6 @@ class SpaceApp
             puts "#{mission.id}) #{mission.name}"
             ids << mission.id
         end
-        # select mission by id
         puts " "
         choice = gets.chomp
         while !ids.include?(choice.to_i)
@@ -125,10 +136,8 @@ class SpaceApp
         input = gets.chomp.downcase
         case input
         when "1"
-            # complete_mission
             complete_mission(mission)
         when "2"
-            # abort_mission
             abort_mission(mission)
         else
             puts "Invalid selection, please try again"
@@ -179,11 +188,23 @@ class SpaceApp
         menu
     end
 
+    def fire_astronaut
+        puts "DUE TO BUDGET CUTS, ONE OF YOU UNLUCKY 'NAUTS HAS TO GO:".colorize(:red)
+        unlucky = select_astronaut
+        puts "Hit the road, former-#{unlucky.skill} #{unlucky.name}. Maybe you should go write that book."
+        unlucky.destroy
+    end
+
+    def stress_test_rocket
+        puts "WE CALL IT A STRESS TEST, BUT IT'S REALLY JUST A CHANCE TO DO SOME BARREL ROLLS"
+        unlucky = select_rocket
+        puts "BOOOOOOOOM".colorize.yellow.on_red.blink
+        unlucky.destroy
+    end
+
     #### HELPER METHODS ####
 
     def select_rocket
-        puts "Please choose from the available spacecraft:"
-        puts "---------------------------------------------"
         rocket_array = Rocket.all.select {|rocket| rocket.in_space == false}
         ids = []
         rocket_array.each do |rocket|
@@ -203,8 +224,6 @@ class SpaceApp
     end
 
     def select_astronaut
-        puts "Who will crew your spacecraft?"
-        puts "---------------------------------------------"
         astronaut_array = Astronaut.all.select {|astro| astro.in_space == false}
         ids = []
         astronaut_array.each do |astro|
