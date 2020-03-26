@@ -88,9 +88,12 @@ class SpaceApp
         puts " "
         puts "Who will crew your spacecraft?"
         puts "---------------------------------------------"
+        puts " "
         astro = select_astronaut
         if rocket == nil or astro == nil
+            puts " "
             puts "Mission creation failed!".red
+            puts " "
         else
             mission = Mission.create(name:name, rocket_id:rocket.id, astronaut_id:astro.id, completed: false, manager_id:@manager.id)
             rocket.update(in_space: true)
@@ -113,7 +116,7 @@ class SpaceApp
         puts "----------------------------------------"
         view_completed_missions.each do |mission|
             if mission.completed == nil
-                puts "***#{mission.id}) #{mission.name}*** ABORTED".colorize(:red)
+                puts "#{mission.id}) ***#{mission.name}*** ABORTED".colorize(:red)
             else
                 puts "#{mission.id}) #{mission.name}".colorize(:green)
             end
@@ -162,19 +165,25 @@ class SpaceApp
         rando_rocket = Rocket.all.find {|rocket| rocket.in_space == false}
         randonaut = Astronaut.all.find {|naut| naut.in_space == false}
         randoname = Faker::Company.buzzword + " " + Faker::Space.planet
-        rando_mission = Mission.create(name:randoname, rocket_id:rando_rocket.id, astronaut_id:randonaut.id, manager_id:@manager.id, completed:false)
-        rando_rocket.update(in_space:true)
-        randonaut.update(in_space:true)
-        puts "#{rando_mission.id}) #{rando_mission.name} created by TEENMOM #{@manager.name}.".green
-        puts "============================================================"
-        puts " "
+        if rando_rocket == nil or randonaut == nil
+            puts " "
+            puts "Mission creation failed, check astronaut roster and rocket inventory.".red
+            puts " "
+        else
+            rando_mission = Mission.create(name:randoname, rocket_id:rando_rocket.id, astronaut_id:randonaut.id, manager_id:@manager.id, completed:false)
+            rando_rocket.update(in_space:true)
+            randonaut.update(in_space:true)
+            puts "#{rando_mission.id}) #{rando_mission.name} created by TEENMOM #{@manager.name}.".green
+            puts "============================================================"
+            puts " "
+        end
         menu
     end
 
     def view_rockets
         puts " "
         Rocket.all.each do |rocket|
-            if rocket.in_space
+            if rocket.in_space == false
                 puts "#{rocket.id}) #{rocket.name} : available".green
             else
                 puts "#{rocket.id}) #{rocket.name} : deployed".red
@@ -200,7 +209,7 @@ class SpaceApp
     def view_astronauts
         puts " "
         Astronaut.all.each do |astronaut|
-            if astronaut.in_space
+            if astronaut.in_space == false
                 puts "#{astronaut.id}) #{astronaut.skill.upcase} #{astronaut.name} : available".green
             else
                 puts "#{astronaut.id}) #{astronaut.skill.upcase} #{astronaut.name} : deployed".red
@@ -361,7 +370,6 @@ class SpaceApp
 
     def complete_mission(mission)
         mission.update(completed: true)
-        binding.pry
         astronaut = Astronaut.all.find {|a| a.id == mission.astronaut_id}
         rocket = Rocket.all.find {|r| r.id == mission.rocket_id}
         astronaut.update(in_space: false)
