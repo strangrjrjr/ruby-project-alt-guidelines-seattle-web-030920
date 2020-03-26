@@ -84,6 +84,7 @@ class SpaceApp
     end
 
     def generate_mission
-
+        # pull down info from api
+        # create mission
     end
 end
