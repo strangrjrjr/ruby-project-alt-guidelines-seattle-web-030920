@@ -5,6 +5,7 @@ class CreateMissions < ActiveRecord::Migration[5.2]
       t.boolean :completed
       t.integer :rocket_id
       t.integer :astronaut_id
+      t.integer :manager_id
     end
   end
 end

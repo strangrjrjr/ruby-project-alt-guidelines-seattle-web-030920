@@ -15,6 +15,7 @@ ActiveRecord::Schema.define(version: 2020_03_26_105153) do
   create_table "astronauts", force: :cascade do |t|
     t.string "name"
     t.string "skill"
+    t.boolean "in_space"
   end
 
   create_table "managers", force: :cascade do |t|
@@ -26,6 +27,7 @@ ActiveRecord::Schema.define(version: 2020_03_26_105153) do
     t.boolean "completed"
     t.integer "rocket_id"
     t.integer "astronaut_id"
+    t.integer "manager_id"
   end
 
   create_table "rockets", force: :cascade do |t|

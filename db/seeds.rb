@@ -15,7 +15,7 @@ end
 roles = ["commander", "pilot", "specialist", "copilot"]
 10.times do
     name = Faker::Name.name
-    Astronaut.create(name: name, skill: roles.sample)
+    Astronaut.create(name: name, skill: roles.sample, in_space: false)
 end
 
 # missions
