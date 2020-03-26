@@ -1,4 +1,4 @@
-
+require 'io/console'
 class SpaceApp
 
     def run
@@ -8,6 +8,7 @@ class SpaceApp
     end
 
     def welcome
+        puts " "
         puts "Welcome to:"
         banner = Artii::Base.new :font => 'slant'
         puts banner.asciify("Terrestrial Evaluation Exercise: New")
@@ -27,7 +28,7 @@ class SpaceApp
 
     def menu
         puts "Please select from the following options:"
-        puts " "
+        puts "------------------------------------------- "
         puts "1) Create new mission"
         puts "2) View missions"
         puts "3) Update missions"
@@ -39,7 +40,7 @@ class SpaceApp
         puts "Q) Exit program"
         puts " "
 
-        choice = gets.chomp.downcase
+        choice = STDIN.noecho(&:gets).chomp.downcase
 
         case choice
         when "1"
@@ -67,6 +68,7 @@ class SpaceApp
 
     def create_mission
         puts "What is your mission name?"
+        puts " "
         name = gets.chomp
         rocket = select_rocket
         astro = select_astronaut
@@ -101,7 +103,7 @@ class SpaceApp
 
     def update_mission
         puts "Which mission would you like to update?"
-        # list missions
+        puts "---------------------------------------"
         mission_array = view_incomplete_missions
         ids = []
         mission_array.each do |mission|
@@ -109,10 +111,13 @@ class SpaceApp
             ids << mission.id
         end
         # select mission by id
+        puts " "
         choice = gets.chomp
         while !ids.include?(choice.to_i)
             puts "Invalid selection, please choose from available missions by number."
+            puts " "
             choice = gets.chomp
+            puts " "
         end
         mission = Mission.all.find{|mission| mission.id == choice.to_i}
         puts "1) Complete mission"
@@ -178,6 +183,7 @@ class SpaceApp
 
     def select_rocket
         puts "Please choose from the available spacecraft:"
+        puts "---------------------------------------------"
         rocket_array = Rocket.all.select {|rocket| rocket.in_space == false}
         ids = []
         rocket_array.each do |rocket|
@@ -185,9 +191,11 @@ class SpaceApp
             ids << rocket.id
         end
         choice = gets.chomp
+        puts " "
         while !ids.include?(choice.to_i)
             puts "Invalid selection, please choose from available rockets by id number."
             choice = gets.chomp
+            puts " "
         end
         rocket = Rocket.all.find{|rocket| rocket.id == choice.to_i}
         rocket.update(in_space: true)
@@ -196,6 +204,7 @@ class SpaceApp
 
     def select_astronaut
         puts "Who will crew your spacecraft?"
+        puts "---------------------------------------------"
         astronaut_array = Astronaut.all.select {|astro| astro.in_space == false}
         ids = []
         astronaut_array.each do |astro|
@@ -204,9 +213,11 @@ class SpaceApp
         end
 
         choice = gets.chomp
+        puts " "
         while !ids.include?(choice.to_i)
             puts "Invalid selection, please choose from available crew by id number."
             choice = gets.chomp
+            puts " "
         end
         astro = Astronaut.all.find {|naut| naut.id == choice.to_i}
         astro.update(in_space: true)
