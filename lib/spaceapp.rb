@@ -66,6 +66,7 @@ class SpaceApp
         when "10"
             stress_test_rocket
         when "q"
+            puts ""
             exit
         else
             menu
@@ -200,7 +201,7 @@ class SpaceApp
     def stress_test_rocket
         puts "WE CALL IT A STRESS TEST, BUT IT'S REALLY JUST A CHANCE TO DO SOME BARREL ROLLS"
         unlucky = select_rocket
-        puts "BOOOOOOOOM".colorize.yellow.on_red.blink
+        puts "BOOOOOOOOM".yellow.on_red.blink
         puts " "
         unlucky.destroy
         menu
