@@ -6,8 +6,8 @@
 
 * After cloning or downloading the project folder, make sure to open a terminal inside the main folder and run `bundle install` to grab the required gems.
 * Once `bundle install` is complete, run `rake db:migrate` to create your database.
-  * You may also run `rake db:seed` to populate the database with some values, but astronaut and rocket status are currently incorrect.
-  * An alternative to `rake db:seed` is the auto-generate mission feature!
+  * You may also run `rake db:seed` to populate the database with some values, but astronaut and rocket statuses may not start off correct.
+  * An alternative to `rake db:seed` is the auto-generation featured in the app!
 
 
 ### Usage
