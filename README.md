@@ -9,6 +9,7 @@
   * You may also run `rake db:seed` to populate the database with some values; this step is not necessary, however.
 
 ### Usage
+
 * From a terminal inside the main folder, run `ruby bin/run.rb`
 * After the starting splash, you will be prompted to enter a TEENMOM username.
   * Usernames can be any combination of characters, and each username in the database is guaranteed to be unique.
@@ -19,7 +20,8 @@
   * Quit is not case sensitive.
 * Missions require a name, rocket, astronaut, and manager.
   * The user will create the mission name, and select a rocket and crew from those available.
-  * The user can automatically generate missions if they desire.
+  * If no rockets or crew are available, mission creation fails.
+  * The user can automatically generate missions if they desire, but missions are still bound by existing constraints on crew and rockets.
   * TEENMOMs will update the mission status based on its success or failure.
   * In the event of adverse conditions, missions can be aborted.
   * Once a mission status is updated, the crew and rockets return to the queue for future missions.
@@ -27,6 +29,14 @@
 * In the event of a crew or rocket shortage, the user can create new ones on the fly.
 * If your budget gets cut or you really want to see if that rocket can do a flip, astronauts can be fired, and rockets can be 'stress tested'.
 * Don't forget to check out the leaderboard for some good stats!
+
+
+#### Further Reaches
+
+* Rockets have a randomly generated capacity, I'd like to build out a payload feature so missions will require specific rockets.
+* Crew have roles, I'd also like rockets to require a full compliment of crew (commander, pilot, copilot, specialist).
+* Password implementation for Managers.
+* A launch feature with a calculated success percentage.
 
 
 ### Sources
