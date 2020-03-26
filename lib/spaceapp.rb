@@ -44,7 +44,7 @@ class SpaceApp
         puts "Q) Exit program"
         puts " "
 
-        choice = STDIN.noecho(&:gets).chomp.downcase
+        choice = gets.chomp.downcase
 
         case choice
         when "1"
@@ -156,10 +156,13 @@ class SpaceApp
         randonaut = Astronaut.all.find {|naut| naut.in_space == false}
         randoname = Faker::Company.buzzword + " " + Faker::Space.planet
         rando_mission = Mission.create(name:randoname, rocket_id:rando_rocket.id, astronaut_id:randonaut.id, manager_id:@manager.id, completed:false)
+        rando_rocket.update(in_space:true)
+        randonaut.update(in_space:true)
         ap rando_mission
         menu
     end
 
+    # improve
     def view_rockets
         ap Rocket.all
         menu
@@ -178,6 +181,7 @@ class SpaceApp
         menu
     end
 
+    # improve
     def view_astronauts
         ap Astronaut.all
         menu
@@ -213,6 +217,7 @@ class SpaceApp
     end
 
     def leaderboard
+        puts "-----------------------------------------------------"
         banner = Artii::Base.new
         puts banner.asciify("Leaderboard").red
         puts " "
@@ -225,7 +230,7 @@ class SpaceApp
         print "ROCKET WITH THE MOST SUCCESSFUL MISSIONS: ".blue
         puts rocket_with_most_successful_missions
         puts " "
-        puts " "
+        puts "----------------------------------------------------- "
         menu
     end
 

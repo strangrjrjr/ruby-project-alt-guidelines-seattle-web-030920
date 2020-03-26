@@ -28,6 +28,20 @@
 * If your budget gets cut or you really want to see if that rocket can do a flip, astronauts can be fired, and rockets can be 'stress tested'.
 * Don't forget to check out the leaderboard for some good stats!
 
+
+### Sources
+[Public APIs](https://github.com/public-apis/public-apis#index)
+
+[SpaceX API](https://docs.spacexdata.com/?version=latest#intro)
+
+[artii](https://rubygems.org/gems/artii)
+
+[faker](https://rubygems.org/gems/faker)
+
+[colorize](https://rubygems.org/gems/colorize)
+
+[awesome_print](https://rubygems.org/gems/awesome_print)
+
 ENJOY!
 
 [*]: TEENMOM is a reference to the podcast [Mission To Zyxx](https://missiontozyxx.space) and the beloved Temporary Emergency Emissarial New Missions Operation Manager Nermut Bundaloy.
