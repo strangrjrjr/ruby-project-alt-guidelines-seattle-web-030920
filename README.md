@@ -56,4 +56,4 @@
 
 ENJOY!
 
-[*]: TEENMOM is a reference to the podcast [Mission To Zyxx](https://missiontozyxx.space) and the beloved Temporary Emergency Emissarial New Missions Operation Manager Nermut Bundaloy.
+[*]: TEENMOM is a reference to the podcast [Mission To Zyxx](https://missiontozyxx.space) and the beloved Temporary Emergency Emissarial Negotiator Missions Operation Manager Nermut Bundaloy.
