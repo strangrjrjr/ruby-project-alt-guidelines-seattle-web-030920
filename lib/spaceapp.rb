@@ -89,7 +89,7 @@ class SpaceApp
         puts "----------------------------------------"
         view_completed_missions.each do |mission|
             if mission.completed == nil
-                puts "xxx#{mission.id}) #{mission.name}xxx ABORTED"
+                puts "#{mission.id}) #{mission.name} ABORTED".colorize(:red)
             else
                 puts "#{mission.id}) #{mission.name}"
             end
@@ -224,7 +224,7 @@ class SpaceApp
         mission.update(completed: true)
         mission.astronaut.update(in_space: false)
         mission.rocket.update(in_space: false)
-        puts "Mission #{mission.name} completed!"
+        puts "Mission #{mission.name} completed!".colorize(:green)
         puts " "
         menu
     end
@@ -233,7 +233,7 @@ class SpaceApp
         mission.update(completed: nil)
         mission.astronaut.update(in_space: false)
         mission.rocket.update(in_space: false)
-        puts "MISSION #{mission.name} ABORTED"
+        puts "MISSION #{mission.name} ABORTED".colorize(:red)
         puts " "
         menu
     end
