@@ -10,9 +10,10 @@ class SpaceApp
     def welcome
         puts "Welcome to:"
         banner = Artii::Base.new :font => 'slant'
-        puts banner.asciify("Terrestrial Evaluation Exercise New")
+        puts banner.asciify("Terrestrial Evaluation Exercise: New")
         puts banner.asciify("Mission Operations Manager")
         puts " "
+        system 'say welcome to: terrestrial evaluation exercise new mission operations manager'
     end
 
     def login
@@ -26,6 +27,7 @@ class SpaceApp
 
     def menu
         puts "Please select from the following options:"
+        puts " "
         puts "1) Create new mission"
         puts "2) View missions"
         puts "3) Update missions"
@@ -78,14 +80,16 @@ class SpaceApp
 
     def view_missions
         puts "Missions in progress:"
+        puts "----------------------------------------"
         view_incomplete_missions.each do |mission|
             puts "#{mission.id}) #{mission.name}"
         end
         puts " "
         puts "Completed missions:"
+        puts "----------------------------------------"
         view_completed_missions.each do |mission|
             if mission.completed == nil
-                puts "#{mission.id}) #{mission.name} ABORTED"
+                puts "xxx#{mission.id}) #{mission.name}xxx ABORTED"
             else
                 puts "#{mission.id}) #{mission.name}"
             end
@@ -128,8 +132,12 @@ class SpaceApp
     end
 
     def generate_mission
-        # pull down info from api
-        # create mission
+        rando_rocket = Rocket.all.find {|rocket| rocket.in_space == false}
+        randonaut = Astronaut.all.find {|naut| naut.in_space == false}
+        randoname = Faker::Company.buzzword + " " + Faker::Space.planet
+        rando_mission = Mission.create(name:randoname, rocket_id:rando_rocket.id, astronaut_id:randonaut.id, manager_id:@manager.id, completed:false)
+        ap rando_mission
+        menu
     end
 
     def view_rockets
@@ -142,10 +150,10 @@ class SpaceApp
         rocket_array = rocket_data.map do |rocket|
             rocket["rocket_name"]
         end
-        rocket_array.sample do |rocket|
-            new_rocket = Rocket.create(name: rocket, capacity: 1 + rand(5), in_space: false)
-        end
-        puts "Your shiny new #{new_rocket.name} is ready!"
+        new_rocket = rocket_array.sample 
+        Rocket.create(name: new_rocket, capacity: 1 + rand(5), in_space: false)
+        puts " "
+        puts "Your shiny new #{new_rocket} is ready!"
         puts " "
         menu
     end
@@ -157,8 +165,9 @@ class SpaceApp
 
     def create_astronaut
         roles = ["commander", "pilot", "specialist", "copilot"]
-        name = Faker::Name.name
+        name = Faker::FunnyName.name
         new_astro = Astronaut.create(name: name, skill: roles.sample, in_space: false)
+        puts " "
         puts "#{new_astro.skill.upcase} #{new_astro.name} just left the academy; reporting for duty!"
         puts " "
         menu
@@ -176,7 +185,7 @@ class SpaceApp
         end
         choice = gets.chomp
         while !ids.include?(choice.to_i)
-            puts "Invalid selection, please choose from available rockets by number."
+            puts "Invalid selection, please choose from available rockets by id number."
             choice = gets.chomp
         end
         rocket = Rocket.all.find{|rocket| rocket.id == choice.to_i}
@@ -195,7 +204,7 @@ class SpaceApp
 
         choice = gets.chomp
         while !ids.include?(choice.to_i)
-            puts "Invalid selection, please choose from available missions by number."
+            puts "Invalid selection, please choose from available crew by id number."
             choice = gets.chomp
         end
         astro = Astronaut.all.find {|naut| naut.id == choice.to_i}
