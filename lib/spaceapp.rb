@@ -37,6 +37,8 @@ class SpaceApp
     end
 
     def create_mission
+        puts "What is your mission name?"
+        name = gets.chomp
         rocket = select_rocket
         astro = select_astronaut
         mission.create(name:name, rocket_id:rocket.id, astronaut_id:astro.id, completed: false, manager_id:@manager.id)
@@ -47,39 +49,41 @@ class SpaceApp
 
     def view_missions
         puts "Missions in progress:"
-        in_prog = Mission.all.select {|mission| mission.completed == false}
-        in_prog.each do |mission|
+        view_incomplete_missions.each do |mission|
             puts "#{mission.id}) #{mission.name}"
         end
         puts " "
         puts "Completed missions:"
-        complete = Mission.all.select {|mission| mission.completed == true}
-        complete.each do |mission|
+        view_completed_missions.each do |mission|
             puts "#{mission.id}) #{mission.name}"
         end
         menu
     end
 
     def update_mission
-        
+        puts "Which mission would you like to update?"
+        # list missions
+        view_incomplete_missions
+        # select mission
+
+        puts "Is this mission complete, or aborted?"
+        # complete_mission
+        # abort_mission
         menu
     end
 
     #### HELPER METHODS ####
-    
-    def select_mission
-        puts "What is your mission name?"
-        name = gets.chomp
+
+    def select_rocket
         puts "Please choose from the available spacecraft:"
         rocket_array = Rocket.all.select {|rocket| rocket.in_space == false}
         rocket_array.each do |rocket|
             puts "#{rocket.id}) #{rocket.name}: Capacity #{rocket.capacity}"
         end
-        binding.pry
         rocket = gets.chomp
-        # choose by id
+        # choose by id and !in_space
         # loop for bad input
-        #update in_space
+        # update in_space
     end
 
     def select_astronaut
@@ -90,20 +94,32 @@ class SpaceApp
         end
 
         astro = gets.chomp
-        # choose by id
-        #loop for bad input
-        #update in_space
+        # choose by id and !in_space
+        # loop for bad input
+        # update in_space
+    end
+
+    def view_incomplete_missions
+        Mission.all.select {|mission| mission.completed == false}
+    end
+
+    def view_completed_missions
+        Mission.all.select {|mission| mission.completed != false}
     end
 
     def complete_mission(mission)
         mission.completed = true
+        mission.astronaut.in_space = false
+        mission.rocket.in_space = false
         puts "Mission #{mission.name} completed!"
         menu
     end
 
     def abort_mission(mission)
+        mission.completed = nil
+        mission.rocket.in_space = false
+        mission.astronaut.in_space = false
         puts "MISSION #{mission.name} ABORTED"
-        mission.destroy
         menu
     end
 
