@@ -89,12 +89,16 @@ class SpaceApp
         puts "Who will crew your spacecraft?"
         puts "---------------------------------------------"
         astro = select_astronaut
-        mission = Mission.create(name:name, rocket_id:rocket.id, astronaut_id:astro.id, completed: false, manager_id:@manager.id)
-        rocket.update(in_space: true)
-        astro.update(in_space: true)
-        puts " "
-        puts "Mission created! #{astro.name} will crew the #{rocket.name} on mission #{mission.name}.".green
-        puts " "
+        if rocket == nil or astro == nil
+            puts "Mission creation failed!".red
+        else
+            mission = Mission.create(name:name, rocket_id:rocket.id, astronaut_id:astro.id, completed: false, manager_id:@manager.id)
+            rocket.update(in_space: true)
+            astro.update(in_space: true)
+            puts " "
+            puts "Mission created! #{astro.name} will crew the #{rocket.name} on mission #{mission.name}.".green
+            puts " "
+        end
         menu
     end
 
@@ -301,7 +305,8 @@ class SpaceApp
     def select_rocket
         rocket_array = Rocket.all.select {|rocket| rocket.in_space == false}
         if rocket_array.empty?
-            create_rocket
+            puts "No available rockets, please purchase more.".red
+            nil
         else
             ids = []
             rocket_array.each do |rocket|
@@ -324,7 +329,8 @@ class SpaceApp
     def select_astronaut
         astronaut_array = Astronaut.all.select {|astro| astro.in_space == false}
         if astronaut_array.empty?
-            create_astronaut
+            puts "No astronauts available, please train more.".red
+            nil
         else
             ids = []
             astronaut_array.each do |astro|
