@@ -16,6 +16,7 @@ class SpaceApp
         puts "2) View missions"
         puts "3) Update missions"
         puts "4) Abort mission"
+        puts "Q) Exit program"
 
         choice = gets.chomp
 
@@ -28,6 +29,8 @@ class SpaceApp
             update_mission
         when "4"
             abort_mission
+        when "q"
+            exit
         else
             menu
         end
@@ -55,7 +58,8 @@ class SpaceApp
         # choose by id
         #loop for bad input
         #update in_space
-        @mission.create(name:name, rocket_id:rocket.id, astronaut_id:astro.id, completed: false, manager_id:@manager.id)
+        mission.create(name:name, rocket_id:rocket.id, astronaut_id:astro.id, completed: false, manager_id:@manager.id)
+        menu
     end
 
     def view_missions
@@ -66,25 +70,35 @@ class SpaceApp
         end
         puts " "
         puts "Completed missions:"
-        complete = Mission.all.select {|mission| mission.complete == true}
+        complete = Mission.all.select {|mission| mission.completed == true}
         complete.each do |mission|
             puts "#{mission.id}) #{mission.name}"
         end
+        menu
     end
 
     def complete_mission(mission)
         mission.completed = true
+        puts "Mission #{mission.name} completed!"
+        menu
     end
 
     def abort_mission(mission)
-        mission.complete = false
+        mission.completed = false
         mission.astronaut_id = nil
         mission.rocket_id = nil
-        puts "MISSION ABORTED"
+        puts "MISSION #{mission.name} ABORTED"
+        menu
     end
 
     def generate_mission
         # pull down info from api
         # create mission
+    end
+
+    def run
+        welcome
+        login
+        menu
     end
 end
