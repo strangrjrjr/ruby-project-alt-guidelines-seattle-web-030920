@@ -1,5 +1,12 @@
 
 class SpaceApp
+
+    def run
+        welcome
+        login
+        menu
+    end
+
     def welcome
         puts "Welcome to:"
         banner = Artii::Base.new :font => 'slant'
@@ -23,6 +30,10 @@ class SpaceApp
         puts "2) View missions"
         puts "3) Update missions"
         puts "4) Generate a new mission automatically"
+        puts "5) View rockets"
+        puts "6) Build new rocket"
+        puts "7) View astronauts"
+        puts "8) Hire new astronaut"
         puts "Q) Exit program"
 
         choice = gets.chomp.downcase
@@ -36,6 +47,14 @@ class SpaceApp
             update_mission
         when "4"
             generate_mission
+        when "5"
+            view_rockets
+        when "6"
+            create_rocket
+        when "7"
+            view_astronauts
+        when "8"
+            create_astronaut
         when "q"
             exit
         else
@@ -48,7 +67,7 @@ class SpaceApp
         name = gets.chomp
         rocket = select_rocket
         astro = select_astronaut
-        Mission.create(name:name, rocket_id:rocket.id, astronaut_id:astro.id, completed: false, manager_id:@manager.id)
+        mission = Mission.create(name:name, rocket_id:rocket.id, astronaut_id:astro.id, completed: false, manager_id:@manager.id)
         rocket.update(in_space: true)
         astro.update(in_space: true)
         puts " "
@@ -108,6 +127,43 @@ class SpaceApp
         menu
     end
 
+    def generate_mission
+        # pull down info from api
+        # create mission
+    end
+
+    def view_rockets
+        ap Rocket.all
+        menu
+    end
+
+    def create_rocket
+        rocket_data = JSON.parse(RestClient.get("https://api.spacexdata.com/v3/rockets"))
+        rocket_array = rocket_data.map do |rocket|
+            rocket["rocket_name"]
+        end
+        rocket_array.sample do |rocket|
+            new_rocket = Rocket.create(name: rocket, capacity: 1 + rand(5), in_space: false)
+        end
+        puts "Your shiny new #{new_rocket.name} is ready!"
+        puts " "
+        menu
+    end
+
+    def view_astronauts
+        ap Astronaut.all
+        menu
+    end
+
+    def create_astronaut
+        roles = ["commander", "pilot", "specialist", "copilot"]
+        name = Faker::Name.name
+        new_astro = Astronaut.create(name: name, skill: roles.sample, in_space: false)
+        puts "#{new_astro.skill.upcase} #{new_astro.name} just left the academy; reporting for duty!"
+        puts " "
+        menu
+    end
+
     #### HELPER METHODS ####
 
     def select_rocket
@@ -156,38 +212,20 @@ class SpaceApp
     end
 
     def complete_mission(mission)
-        # mission.completed = true
-        # mission.astronaut.in_space = false
-        # mission.rocket.in_space = false
         mission.update(completed: true)
         mission.astronaut.update(in_space: false)
         mission.rocket.update(in_space: false)
-        binding.pry
         puts "Mission #{mission.name} completed!"
         puts " "
         menu
     end
 
     def abort_mission(mission)
-        # mission.completed = nil
-        # mission.rocket.in_space = false
-        # mission.astronaut.in_space = false
         mission.update(completed: nil)
         mission.astronaut.update(in_space: false)
         mission.rocket.update(in_space: false)
         puts "MISSION #{mission.name} ABORTED"
         puts " "
-        menu
-    end
-
-    def generate_mission
-        # pull down info from api
-        # create mission
-    end
-
-    def run
-        welcome
-        login
         menu
     end
 end
