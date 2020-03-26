@@ -374,7 +374,6 @@ class SpaceApp
         mission.update(completed: true)
         astronaut = Astronaut.all.find {|a| a.id == mission.astronaut_id}
         rocket = Rocket.all.find {|r| r.id == mission.rocket_id}
-        binding.pry
         astronaut.update(in_space: false)
         rocket.update(in_space: false)
         puts "Mission #{mission.name} completed!".colorize(:green)
