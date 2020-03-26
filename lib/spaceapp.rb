@@ -192,14 +192,18 @@ class SpaceApp
         puts "DUE TO BUDGET CUTS, ONE OF YOU UNLUCKY 'NAUTS HAS TO GO:".colorize(:red)
         unlucky = select_astronaut
         puts "Hit the road, former-#{unlucky.skill} #{unlucky.name}. Maybe you should go write that book."
+        puts " "
         unlucky.destroy
+        menu
     end
 
     def stress_test_rocket
         puts "WE CALL IT A STRESS TEST, BUT IT'S REALLY JUST A CHANCE TO DO SOME BARREL ROLLS"
         unlucky = select_rocket
         puts "BOOOOOOOOM".colorize.yellow.on_red.blink
+        puts " "
         unlucky.destroy
+        menu
     end
 
     #### HELPER METHODS ####
