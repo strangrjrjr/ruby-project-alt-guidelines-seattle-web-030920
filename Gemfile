@@ -6,6 +6,7 @@ gem "sinatra-activerecord"
 gem "sqlite3", '~> 1.3.6'
 gem "pry"
 gem "json"
+gem "artii"
 gem "rest-client"
 gem "require_all"
 gem "faker"
