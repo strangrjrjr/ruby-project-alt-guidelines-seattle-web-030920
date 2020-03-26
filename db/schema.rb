@@ -10,11 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_26_002440) do
+ActiveRecord::Schema.define(version: 2020_03_26_105153) do
 
   create_table "astronauts", force: :cascade do |t|
     t.string "name"
     t.string "skill"
+  end
+
+  create_table "managers", force: :cascade do |t|
+    t.string "name"
   end
 
   create_table "missions", force: :cascade do |t|
@@ -27,6 +31,7 @@ ActiveRecord::Schema.define(version: 2020_03_26_002440) do
   create_table "rockets", force: :cascade do |t|
     t.string "name"
     t.integer "capacity"
+    t.boolean "in_space"
   end
 
 end
