@@ -15,7 +15,7 @@ class SpaceApp
         puts "1) Create new mission"
         puts "2) View missions"
         puts "3) Update missions"
-        puts "4) Abort mission"
+        puts "4) Generate a new mission automatically"
         puts "Q) Exit program"
 
         choice = gets.chomp
@@ -28,7 +28,7 @@ class SpaceApp
         when "3"
             update_mission
         when "4"
-            abort_mission
+            generate_mission
         when "q"
             exit
         else
@@ -37,28 +37,11 @@ class SpaceApp
     end
 
     def create_mission
-        puts "What is your mission name?"
-        name = gets.chomp
-        puts "Please choose from the available spacecraft:"
-        rocket_array = Rocket.all.select {|rocket| rocket.in_space == false}
-        rocket_array.each do |rocket|
-            puts "#{rocket.id}) #{rocket.name}: Capacity #{rocket.capacity}"
-        end
-        # choose by id
-        rocket = gets.chomp
-        # loop for bad input
-        #update in_space
-        puts "Who will crew your spacecraft?"
-        astronaut_array = Astronaut.all.select {|astro| astro.in_space == false}
-        astronaut_array.each do |astro|
-            puts "#{astro.id}) #{astro.name}: #{astro.skill}"
-        end
-
-        astro = gets.chomp
-        # choose by id
-        #loop for bad input
-        #update in_space
+        rocket = select_rocket
+        astro = select_astronaut
         mission.create(name:name, rocket_id:rocket.id, astronaut_id:astro.id, completed: false, manager_id:@manager.id)
+        rocket.in_space = true
+        astro.in_space = true
         menu
     end
 
@@ -77,6 +60,41 @@ class SpaceApp
         menu
     end
 
+    def update_mission
+        
+        menu
+    end
+
+    #### HELPER METHODS ####
+    
+    def select_mission
+        puts "What is your mission name?"
+        name = gets.chomp
+        puts "Please choose from the available spacecraft:"
+        rocket_array = Rocket.all.select {|rocket| rocket.in_space == false}
+        rocket_array.each do |rocket|
+            puts "#{rocket.id}) #{rocket.name}: Capacity #{rocket.capacity}"
+        end
+        binding.pry
+        rocket = gets.chomp
+        # choose by id
+        # loop for bad input
+        #update in_space
+    end
+
+    def select_astronaut
+        puts "Who will crew your spacecraft?"
+        astronaut_array = Astronaut.all.select {|astro| astro.in_space == false}
+        astronaut_array.each do |astro|
+            puts "#{astro.id}) #{astro.name}: #{astro.skill}"
+        end
+
+        astro = gets.chomp
+        # choose by id
+        #loop for bad input
+        #update in_space
+    end
+
     def complete_mission(mission)
         mission.completed = true
         puts "Mission #{mission.name} completed!"
@@ -84,10 +102,8 @@ class SpaceApp
     end
 
     def abort_mission(mission)
-        mission.completed = false
-        mission.astronaut_id = nil
-        mission.rocket_id = nil
         puts "MISSION #{mission.name} ABORTED"
+        mission.destroy
         menu
     end
 
