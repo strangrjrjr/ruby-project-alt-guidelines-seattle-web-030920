@@ -29,8 +29,15 @@ mission_data = JSON.parse(RestClient.get("https://api.spacexdata.com/v3/missions
 mission_array = mission_data.map do |mission|
     mission["mission_name"]
 end
+# need a better way to set rocket and astronaut in_space flags
+# this is a weak workaround
 mission_array.each do |mission|
-    Mission.create(name: mission, completed: false, rocket_id: Rocket.all.sample.id, astronaut_id: Astronaut.all.sample.id, manager_id: Manager.all.sample.id)
+    astronaut = Astronaut.all.sample
+    astronaut.update(in_space:true)
+    rocket = Rocket.all.sample
+    rocket.update(in_space:true)
+    Mission.create(name: mission, completed: false, rocket_id: rocket.id, astronaut_id: astronaut.id, manager_id: Manager.all.sample.id)
+
 end
 
 puts "Seed complete!"

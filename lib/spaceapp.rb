@@ -144,8 +144,8 @@ class SpaceApp
             puts " "
         end
         mission = Mission.all.find{|mission| mission.id == choice.to_i}
-        puts "1) Complete mission"
-        puts "2) Abort mission"
+        puts "1) Complete mission".green
+        puts "2) Abort mission".red
         input = gets.chomp.downcase
         case input
         when "1"
@@ -153,7 +153,9 @@ class SpaceApp
         when "2"
             abort_mission(mission)
         else
+            puts " "
             puts "Invalid selection, please try again"
+            puts " "
             update_mission
         end
         puts " "
@@ -372,6 +374,7 @@ class SpaceApp
         mission.update(completed: true)
         astronaut = Astronaut.all.find {|a| a.id == mission.astronaut_id}
         rocket = Rocket.all.find {|r| r.id == mission.rocket_id}
+        binding.pry
         astronaut.update(in_space: false)
         rocket.update(in_space: false)
         puts "Mission #{mission.name} completed!".colorize(:green)
