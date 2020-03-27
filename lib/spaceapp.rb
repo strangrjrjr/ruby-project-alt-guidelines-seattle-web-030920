@@ -316,7 +316,9 @@ class SpaceApp
     def select_rocket
         rocket_array = Rocket.all.select {|rocket| rocket.in_space == false}
         if rocket_array.empty?
+            puts " "
             puts "No available rockets, please purchase more.".red
+            puts " "
             nil
         else
             ids = []
@@ -340,7 +342,9 @@ class SpaceApp
     def select_astronaut
         astronaut_array = Astronaut.all.select {|astro| astro.in_space == false}
         if astronaut_array.empty?
+            puts " "
             puts "No astronauts available, please train more.".red
+            puts " "
             nil
         else
             ids = []
@@ -371,6 +375,7 @@ class SpaceApp
     end
 
     def complete_mission(mission)
+        puts " "
         mission.update(completed: true)
         astronaut = Astronaut.all.find {|a| a.id == mission.astronaut_id}
         rocket = Rocket.all.find {|r| r.id == mission.rocket_id}
@@ -382,6 +387,7 @@ class SpaceApp
     end
 
     def abort_mission(mission)
+        puts " "
         mission.update(completed: nil)
         mission.astronaut.update(in_space: false)
         mission.rocket.update(in_space: false)
